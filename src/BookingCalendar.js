@@ -744,7 +744,8 @@ class BookingCalendar extends HTMLElement {
   }
 
   formatDate(date) {
-    return date.toISOString().split("T")[0];
+    //return date.toISOString().split('T')[0];
+    return date.toLocaleDateString("en-CA");
   }
 
   formatDateTime(dateString, timeString) {
