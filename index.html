@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Calendar Component</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background-color: #f5f5f7;
+        padding: 40px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #1d1d1f;
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      .description {
+        color: #86868b;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #1d1d1f;
+        font-weight: 500;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Запись на услугу</h1>
+      <p class="description">Заполните форму ниже для бронирования</p>
+
+      <form id="bookingForm">
+        <div class="form-group">
+          <label for="name">Ваше имя</label>
+          <input type="text" id="name" required placeholder="Анна" />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Телефон</label>
+          <input
+            type="tel"
+            id="phone"
+            required
+            placeholder="+375 (29) 111‒11‒11"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="service">Услуга</label>
+          <select id="service" required>
+            <option value="">Выберите</option>
+            <option value="service1">Услуга1</option>
+            <option value="service2">Услуга2</option>
+            <option value="service3">Услуга3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Выберите дату и время</label>
+          <booking-calendar
+            work-hours='{"start": 10, "end": 21}'
+            slot-duration="20"
+            locale="ru-RU"
+            api-url="/api/booked-slots"
+          >
+          </booking-calendar>
+          <input
+            type="hidden"
+            id="selectedDateTime"
+            name="date_time"
+            required
+          />
+        </div>
+        <button type="submit" class="btn">Отправить заявку</button>
+      </form>
+    </div>
+
+    <script type="module" src="./src/BookingCalendar.js"></script>
+    <script>
+      // Пример использования API
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("bookingForm");
+        const calendar = document.querySelector("booking-calendar");
+
+        // Получаем выбранное время при отправке формы
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const selected = calendar.getSelectedDateTime();
+          if (!selected) {
+            alert("Пожалуйста, выберите дату и время");
+            return;
+          }
+
+          console.log("Отправка данных:", {
+            name: document.getElementById("name").value,
+            phone: document.getElementById("phone").value,
+            service: document.getElementById("service").value,
+            datetime: selected.datetime,
+          });
+
+          // Здесь будет отправка на сервер
+          alert("Форма отправлена!");
+        });
+
+        // Пример динамического обновления занятых слотов
+        setTimeout(() => {
+          // Можно обновить занятые слоты через API
+          // calendar.setBookedSlots(newSlotsData);
+          // Или вызвать refresh для перезагрузки
+          // calendar.refresh();
+        }, 5000);
+      });
+    </script>
+  </body>
+</html>
